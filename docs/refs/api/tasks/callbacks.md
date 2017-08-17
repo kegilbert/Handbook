@@ -187,11 +187,15 @@ int main() {
 
 While heralded for its support of high-level design patterns, C++ makes it surprisingly difficult to support all of the standard function types.
 
-State is important, so need to support either C-style function pointers with state, or C++ member function pointers.
-Stateless callbacks are just as common, but passing a stateless callback as a member function function requires writing a lot of boilerplate code and instantiating an empty class. So we need to also support a standard function pointer.
-Another design pattern you may see is the function object, a class that overrides the function call operator. We can expect the user to pass function objects as C++ member function pointers if needed.
-A useful C++ feature is the enforcement of const-correctness, but this becomes unfortunately complicated with the state associated with callbacks. A C++ API needs to support both the const and non-const versions of member function pointers.
-Another C++ feature is volatile-correctness in case the underlying state must be volatile, but if necessary we can probably expect the user to hide volatile members inside of a non-volatile class.
+1. State is important, so need to support either C-style function pointers with state, or C++ member function pointers.
+
+2. Stateless callbacks are just as common, but passing a stateless callback as a member function function requires writing a lot of boilerplate code and instantiating an empty class. So we need to also support a standard function pointer.
+
+3. Another design pattern you may see is the function object, a class that overrides the function call operator. We can expect the user to pass function objects as C++ member function pointers if needed.
+
+4. A useful C++ feature is the enforcement of const-correctness, but this becomes unfortunately complicated with the state associated with callbacks. A C++ API needs to support both the const and non-const versions of member function pointers.
+
+5. Another C++ feature is volatile-correctness in case the underlying state must be volatile, but if necessary we can probably expect the user to hide volatile members inside of a non-volatile class.
 
 Long story short, C++ requires a large set of overloads to support all of the standard function types. It is very error-prone and just flat out unreasonable to expect a new library author to add all of these overloads to every function that could take in a callback.
 
