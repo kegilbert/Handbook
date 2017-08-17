@@ -471,7 +471,7 @@ public:
 int main() {
     // Create sonar object on pins D5 and D6
     Sonar sonar(D5, D6);
-    // Begin background thread sonar acquires
+    // Begin background task sonar acquires
     sonar.start();
 
     while(1) {
