@@ -326,6 +326,26 @@ An important thing to note, is that this state is restricted to a single pointer
  // Does not work
 adc.attach(callback(&thing, &Thing::dosomething, &arg));
 ```
+If you need to pass multiple arguments to a callback, and you can’t store the arguments in the class, you can create a struct that contains all of the arguments and pass a pointer to that. However, you will need to handle the memory allocation yourself.
+
+``` c++
+// Create a struct that contains all of the state needed for “dosomething”
+struct dosomething_arguments {
+    Thing *thing;
+    int arg1;
+    int arg2;
+};
+
+// Create a function that calls “dosomething” with the arguments
+void dosomething_with_arguments(struct dosomething_arguments *args) {
+    args->thing->dosomething(args->arg1, args->arg2);
+}
+
+
+// Allocate arguments and pass to callback
+struct dosomething_arguments args = { &thing, arg1, arg2 };
+adc.attach(callback(dosomething_with_arguments, &args)); // yes
+```
 
 ### How to call callbacks
 
@@ -370,8 +390,84 @@ public:
 ### SONAR EXAMPLE
 
 ```c++
-``` 
+#include <mbed.h>
 
+class Sonar {
+    DigitalOut *ping;
+    InterruptIn  *echo;
+    Timer      timer;
+    Ticker     delay;
+    Ticker     call;
+    bool       ping_done;
+    bool       ready;
+    int32_t    begin;
+    int32_t    end;
+    int32_t    distance;
+
+public:
+    Sonar(PinName ping_pin, PinName echo_pin) {
+        ping = new DigitalOut(ping_pin);
+        echo = new InterruptIn(echo_pin);
+        ping_done = false;
+        ready     = false;
+        ping->write(0);
+        echo->rise(callback(this, &Sonar::echo_in));
+        echo->fall(callback(this, &Sonar::echo_fall));
+        distance = -1;
+    }
+   
+    void start(void) {
+        call.attach(callback(this, &Sonar::background_read), 0.01f);
+    }
+    
+    void stop(void) {
+        call.detach();
+    }
+ 
+    void ping_toggle(void) {
+        ping->write(0);
+        ping_done = true;
+        delay.detach();
+    }
+    
+    void echo_in(void) {
+        timer.reset();
+        timer.start();
+        begin = timer.read_us();
+    }
+
+    void echo_fall(void) {
+        end = timer.read_us();
+        timer.stop();
+        ready = true;
+    }
+
+    void background_read(void) {
+        ping->write(1);
+        delay.attach(callback(this, &Sonar::ping_toggle), 10.0e-6);
+        ping_done = false;
+        while(!ready) {}
+        distance = end - begin;
+    }
+
+    int32_t read(void) {
+        return distance / 58;
+    }
+};
+
+
+
+int main() {
+    Sonar sonar(D5, D6);
+    sonar.start();
+
+    /* Do some stuff */   
+
+    float distance = sonar.read();
+    sonar.stop();
+}
+
+``` 
 
 ### API
 
