@@ -393,35 +393,35 @@ public:
 #include <mbed.h>
 
 class Sonar {
-    DigitalOut *ping;
+    DigitalOut   *trigger;
     InterruptIn  *echo;
-    Timer      timer;
-    Timeout    timeout;
-    Ticker     ticker;
-    int32_t    begin;
-    int32_t    end;
-    float      distance;
+    Timer        timer;
+    Timeout      timeout;
+    Ticker       ticker;
+    int32_t      begin;
+    int32_t      end;
+    float        distance;
 
 public:
-    Sonar(PinName ping_pin, PinName echo_pin) {
-        ping = new DigitalOut(ping_pin);
+    Sonar(PinName trigger_pin, PinName echo_pin) {
+        trigger = new DigitalOut(trigger_pin);
         echo = new InterruptIn(echo_pin);
-        ping->write(0);
-        echo->rise(tickerback(this, &Sonar::echo_in));
-        echo->fall(tickerback(this, &Sonar::echo_fall));
+        trigger->write(0);
+        echo->rise(callback(this, &Sonar::echo_in));
+        echo->fall(callback(this, &Sonar::echo_fall));
         distance = -1;
     }
 
     void start(void) {
-        ticker.attach(tickerback(this, &Sonar::background_read), 0.01f);
+        ticker.attach(callback(this, &Sonar::background_read), 0.01f);
     }
 
     void stop(void) {
         ticker.detach();
     }
 
-    void ping_toggle(void) {
-        ping->write(0);
+    void trigger_toggle(void) {
+        trigger->write(0);
     }
 
     void echo_in(void) {
@@ -437,8 +437,8 @@ public:
     }
 
     void background_read(void) {
-        ping->write(1);
-        timeout.attach(tickerback(this, &Sonar::ping_toggle), 10.0e-6);
+        trigger->write(1);
+        timeout.attach(callback(this, &Sonar::trigger_toggle), 10.0e-6);
     }
 
     float read(void) {
@@ -452,7 +452,7 @@ int main() {
     sonar.start();
 
     while(1) {
-        wait(0.25f);
+        wait(0.1f);
         printf("%f\r\n", sonar.read());
     }
 }
