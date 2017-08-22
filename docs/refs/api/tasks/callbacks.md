@@ -392,6 +392,9 @@ public:
 ```c++
 #include <mbed.h>
 
+/**
+ *  Sonar class for the HC-SR04
+ */
 class Sonar {
     DigitalOut   *trigger;
     InterruptIn  *echo;
@@ -403,44 +406,74 @@ class Sonar {
     float        distance;
 
 public:
+    /**
+     *  Sonar constructor
+     *  Creates a sonar object on a set of provided pins
+     *  @param trigger_pin  Pin used to trigger reads from the sonar device
+     *  @param echo_pin     Pin used to receive the sonar's distance measurement
+     */
     Sonar(PinName trigger_pin, PinName echo_pin) {
         trigger = new DigitalOut(trigger_pin);
         echo = new InterruptIn(echo_pin);
         trigger->write(0);
-        echo->rise(callback(this, &Sonar::echo_in));
-        echo->fall(callback(this, &Sonar::echo_fall));
         distance = -1;
+
+        echo->rise(callback(this, &Sonar::echo_in));    // Attach handler to the rising interruptIn edge
+        echo->fall(callback(this, &Sonar::echo_fall));  // Attach handler to the falling interruptIn edge
     }
 
+    /**
+     *  Start the background thread to trigger sonar reads every 100ms
+     */
     void start(void) {
         ticker.attach(callback(this, &Sonar::background_read), 0.01f);
     }
 
+    /**
+     *  Stop the background thread that triggers sonar reads
+     */
     void stop(void) {
         ticker.detach();
     }
 
-    void trigger_toggle(void) {
-        trigger->write(0);
-    }
-
+    /**
+     *  Interrupt pin rising edge interrupt handler. Reset and start timer
+     */
     void echo_in(void) {
         timer.reset();
         timer.start();
         begin = timer.read_us();
     }
 
+    /**
+     *  Interrupt pin falling edge interrupt handler. Read and disengage timer. 
+     *  Calculate raw echo pulse length 
+     */
     void echo_fall(void) {
         end = timer.read_us();
         timer.stop();
         distance = end - begin;
     }
 
+    /**
+     *  Wrappper function to set the trigger pin low. Callbacks cannot take in both object and argument pointers.
+     *  See use of this function in background_read().
+     */
+    void trigger_toggle(void) {
+        trigger->write(0);
+    }
+
+    /**
+     *  Background callback thread attached to the periodic ticker that kicks off sonar reads 
+     */
     void background_read(void) {
         trigger->write(1);
         timeout.attach(callback(this, &Sonar::trigger_toggle), 10.0e-6);
     }
 
+    /**
+     *  Public read function that returns the scaled distance result in cm
+     */
     float read(void) {
         return distance / 58.0f;
     }
@@ -448,14 +481,18 @@ public:
 
 
 int main() {
+    // Create sonar object on pins D5 and D6
     Sonar sonar(D5, D6);
+    // Being sonar background thread acquires
     sonar.start();
 
     while(1) {
         wait(0.1f);
+        // Periodically print results fron sonar object
         printf("%f\r\n", sonar.read());
     }
 }
+
 ``` 
 
 ### API
