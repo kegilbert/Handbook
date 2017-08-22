@@ -396,40 +396,34 @@ class Sonar {
     DigitalOut *ping;
     InterruptIn  *echo;
     Timer      timer;
-    Ticker     delay;
-    Ticker     call;
-    bool       ping_done;
-    bool       ready;
+    Timeout    timeout;
+    Ticker     ticker;
     int32_t    begin;
     int32_t    end;
-    int32_t    distance;
+    float      distance;
 
 public:
     Sonar(PinName ping_pin, PinName echo_pin) {
         ping = new DigitalOut(ping_pin);
         echo = new InterruptIn(echo_pin);
-        ping_done = false;
-        ready     = false;
         ping->write(0);
-        echo->rise(callback(this, &Sonar::echo_in));
-        echo->fall(callback(this, &Sonar::echo_fall));
+        echo->rise(tickerback(this, &Sonar::echo_in));
+        echo->fall(tickerback(this, &Sonar::echo_fall));
         distance = -1;
     }
-   
+
     void start(void) {
-        call.attach(callback(this, &Sonar::background_read), 0.01f);
+        ticker.attach(tickerback(this, &Sonar::background_read), 0.01f);
     }
-    
+
     void stop(void) {
-        call.detach();
+        ticker.detach();
     }
- 
+
     void ping_toggle(void) {
         ping->write(0);
-        ping_done = true;
-        delay.detach();
     }
-    
+
     void echo_in(void) {
         timer.reset();
         timer.start();
@@ -439,34 +433,29 @@ public:
     void echo_fall(void) {
         end = timer.read_us();
         timer.stop();
-        ready = true;
+        distance = end - begin;
     }
 
     void background_read(void) {
         ping->write(1);
-        delay.attach(callback(this, &Sonar::ping_toggle), 10.0e-6);
-        ping_done = false;
-        while(!ready) {}
-        distance = end - begin;
+        timeout.attach(tickerback(this, &Sonar::ping_toggle), 10.0e-6);
     }
 
-    int32_t read(void) {
-        return distance / 58;
+    float read(void) {
+        return distance / 58.0f;
     }
 };
-
 
 
 int main() {
     Sonar sonar(D5, D6);
     sonar.start();
 
-    /* Do some stuff */   
-
-    float distance = sonar.read();
-    sonar.stop();
+    while(1) {
+        wait(0.25f);
+        printf("%f\r\n", sonar.read());
+    }
 }
-
 ``` 
 
 ### API
