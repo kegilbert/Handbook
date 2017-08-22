@@ -446,8 +446,8 @@ public:
     }
 
     /**
-     *  Interrupt pin falling edge interrupt handler. Read and disengage timer. 
-     *  Calculate raw echo pulse length 
+     *  Interrupt pin falling edge interrupt handler. Read and disengage timer.
+     *  Calculate raw echo pulse length
      */
     void echo_fall(void) {
         end = timer.read_us();
@@ -456,7 +456,7 @@ public:
     }
 
     /**
-     *  Wrappper function to set the trigger pin low. Callbacks cannot take in both object and argument pointers.
+     *  Wrapper function to set the trigger pin low. Callbacks cannot take in both object and argument pointers.
      *  See use of this function in background_read().
      */
     void trigger_toggle(void) {
@@ -464,7 +464,7 @@ public:
     }
 
     /**
-     *  Background callback thread attached to the periodic ticker that kicks off sonar reads 
+     *  Background callback thread attached to the periodic ticker that kicks off sonar reads
      */
     void background_read(void) {
         trigger->write(1);
@@ -483,16 +483,15 @@ public:
 int main() {
     // Create sonar object on pins D5 and D6
     Sonar sonar(D5, D6);
-    // Being sonar background thread acquires
+    // Begin background thread sonar acquires
     sonar.start();
 
     while(1) {
         wait(0.1f);
-        // Periodically print results fron sonar object
+        // Periodically print results from sonar object
         printf("%f\r\n", sonar.read());
     }
 }
-
 ``` 
 
 ### API
