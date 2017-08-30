@@ -4,18 +4,17 @@ Before we get started, this is a rather large document that delves into a lot of
 
 Table of Contents                                                                                                        
 =================                                                                                                        
-                                                                                                                         
-   * [Table of Contents](#table-of-contents)                                                                             
-         * [Callbacks](#callbacks)                                                                                       
-            * [The importance of state (a.k.a why not function pointers?)](#the-importance-of-state-aka-why-not-function-pointers)                                                                                                                
-            * [Combinatorial explosion damage control (aka why a separate class for Callbacks)](#combinatorial-explosion-damage-control-aka-why-a-separate-class-for-callbacks)                                                                   
-         * [How to create callbacks](#how-to-create-callbacks)                                                           
-         * [How to call callbacks](#how-to-call-callbacks)                                                               
-         * [Sonar Example](#sonar-example)                                                                               
-         * [API](#api)                                                                                                   
-                  * [Thread example with callbacks](#thread-example-with-callbacks)                                      
-                  * [Serial passthrough example with callbacks](#serial-passthrough-example-with-callbacks)              
-
+                                                                           
+  * [Callbacks](#callbacks)                                                                                       
+    * [The importance of state (a.k.a why not function pointers?)](#the-importance-of-state-aka-why-not-function-pointers)                                                                                                                
+    * [Combinatorial explosion damage control (aka why a separate class for Callbacks)](#combinatorial-explosion-damage-control-aka-why-a-separate-class-for-callbacks)                                                                   
+  * [How to create callbacks](#how-to-create-callbacks)                                                           
+  * [How to call callbacks](#how-to-call-callbacks)                                                               
+  * [Sonar Example](#sonar-example)                                                                               
+  * [API](#api)                                                                                                   
+    * [Thread example with callbacks](#thread-example-with-callbacks)                                      
+    * [Serial passthrough example with callbacks](#serial-passthrough-example-with-callbacks)              
+    
 
 ### Callbacks
 
