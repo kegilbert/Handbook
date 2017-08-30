@@ -2,31 +2,20 @@
 
 Before we get started, this is a rather large document that delves into a lot of topics. Use the following links to jump to sections that are focused on more specifics tasks:
 
-Table of Contents
-=================
+Table of Contents                                                                                                        
+=================                                                                                                        
+                                                                                                                         
+   * [Table of Contents](#table-of-contents)                                                                             
+         * [Callbacks](#callbacks)                                                                                       
+            * [The importance of state (a.k.a why not function pointers?)](#the-importance-of-state-aka-why-not-function-pointers)                                                                                                                
+            * [Combinatorial explosion damage control (aka why a separate class for Callbacks)](#combinatorial-explosion-damage-control-aka-why-a-separate-class-for-callbacks)                                                                   
+         * [How to create callbacks](#how-to-create-callbacks)                                                           
+         * [How to call callbacks](#how-to-call-callbacks)                                                               
+         * [Sonar Example](#sonar-example)                                                                               
+         * [API](#api)                                                                                                   
+                  * [Thread example with callbacks](#thread-example-with-callbacks)                                      
+                  * [Serial passthrough example with callbacks](#serial-passthrough-example-with-callbacks)              
 
-* [Why Callback](#callbacks)
-* [The importance of state (a.k.a why not function pointers?)](#the-importance-of-state-aka-why-not-function-pointers)
-* [The importance of explicit memory allocation and C++11 (aka Why not std::function)](#the-importance-of-explicit-memory-allocation-and-c11-aka-why-not-stdfunction)
-* [Context](#context)
-* [Mbed Callbacks](#mbed-callbacks)
-* [Examples](#examples)
-* [Ticker attach](#ticker-attach)
-* [Static function](#static-function)
-* [Member function](#member-function)
-* [Combinatorial explosion damage control (aka why a separate class for Callbacks)](#combinatorial-explosion-damage-control-aka-why-a-separate-class-for-callbacks)
-* [Callback argument passing](#callback-argument-passing)
-* [API](#api)
-* [Thread example with callbacks](#thread-example-with-callbacks)
-* [Warnings and notes](#warnings-and-notes)
-
-[What are callbacks?]
-The importance of state (aka why no function pointers)
-Combinatorial explosion damage control (aka why a separate class for Callbacks)
-Why not std::function?
-[Mbed Callback API]
-[Mbed Callback Examples]
-[Callbacks dos and don’ts]
 
 ### Callbacks
 
@@ -129,7 +118,7 @@ float low_pass_result1;
 float low_pass_result2;
 
 // Here we can register the low-pass filter on both ADC modules
-Int main() {
+int main() {
     // Register one low pass filter
     adc1.attach(low_pass_step, &low_pass_result1);
 
