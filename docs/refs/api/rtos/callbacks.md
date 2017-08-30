@@ -185,7 +185,7 @@ int main() {
 
 #### Combinatorial explosion damage control (aka why a separate class for Callbacks) 
 
-While heralded for its support of high-level design patterns, C++ makes it surprisingly difficult to support all of the standard function types.
+Unfortunately, supporting all of the standard C++ function types is difficult.
 
 1. State is important, so need to support either C-style function pointers with state, or C++ member function pointers.
 
@@ -197,11 +197,11 @@ While heralded for its support of high-level design patterns, C++ makes it surpr
 
 5. Another C++ feature is volatile-correctness in case the underlying state must be volatile, but if necessary we can probably expect the user to hide volatile members inside of a non-volatile class.
 
-Long story short, C++ requires a large set of overloads to support all of the standard function types. It is very error-prone and just flat out unreasonable to expect a new library author to add all of these overloads to every function that could take in a callback.
+Long story short, C++ requires a large set of overloads to support all of the standard function types. It is very error-prone and unreasonable to expect a new library author to add all of these overloads to every function that could take in a callback.
 
 Fortunately, C++ does provide the tools to delegate this problem to a single class. This class is the Callback class. The Callback class should be familiar to users of the std::function class that was introduced in C++11, but is available for older versions of C++.
 
-An overly-simplified description of the Callback class is that is contains all of this madness so you don’t have to.
+**An overly-simplified description of the Callback class is that is contains all of this madness so you don’t have to.**
 
 Here’s the low-pass filter example rewritten to use the callback class:
 
