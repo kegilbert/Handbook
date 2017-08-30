@@ -32,23 +32,23 @@ Why not std::function?
 
 What are callbacks?
 
-A callback is a user provided piece of code that is passed to another function. The callback allows an API to execute the user’s code in its own context. Take the following simple example.
+A callback is a user provided piece of code that is passed to another function. The callback allows an API to execute the user’s code in its own context. Take the following example.
 
 ```c++
 // Create a serial object
-Serial serial(USBTX, USBRX);                                                       
-                                     
-// A function that echoes any received data back          
+Serial serial(USBTX, USBRX);
+
+// A function that echoes any received data back
  void echo() {
     while (serial.readable()) {
-         serial.putc(serial.getc());                        
+         serial.putc(serial.getc());
     }
- }                                                         
-                                                           
- int main(void) {   
-     // Call our function echo whenever the serial line receives data                                   
-     serial.attach(&echo, Serial::RxIrq);                               
- }                                                         
+ }
+
+ int main(void) {
+     // Call our function echo whenever the serial line receives data
+     serial.attach(&echo, Serial::RxIrq);
+ }
 ```
 
 #### The importance of state (a.k.a why not function pointers?)
@@ -76,7 +76,7 @@ This API is sufficient for simple applications, but falls apart when there are m
 For example, consider applying a low-pass filter to two different ADC modules
 
 ``` c++
-// Here is a small running-average low-pass filter. 
+// Here is a small running-average low-pass filter.
 float low_pass_result;
 void low_pass_step(float data) {
      low_pass_result = low_pass_result*0.99 + data*0.01;
@@ -103,7 +103,7 @@ Here’s the low-pass example using an additional argument for state.
 
 ```c++
 class ADC {
-   public: 
+   public:
    // Here, the adc_callback_t type is a function that takes in data, as well as a pointer for state
     template <typename T>
     typedef void (*adc_callback_t)(T *state, float data);
@@ -112,10 +112,10 @@ class ADC {
     // In this example, the ADC read function calls the user-provided callback
     // when data is available.
     template <typename T>
-    void attach(adc_callback_t<T> cb, T *state); 
+    void attach(adc_callback_t<T> cb, T *state);
 };
 
-// Here is a small running-average low-pass filter. 
+// Here is a small running-average low-pass filter.
 void low_pass_step(float *result, float data) {
      *result = *result*0.99 + data*0.01;
 }
@@ -183,7 +183,7 @@ int main() {
 }
 ```
 
-#### Combinatorial explosion damage control (aka why a separate class for Callbacks) 
+#### Combinatorial explosion damage control (aka why a separate class for Callbacks)
 
 Unfortunately, supporting all of the standard C++ function types is difficult.
 
@@ -387,7 +387,9 @@ public:
 }
 ```
 
-### SONAR EXAMPLE
+### Sonar Example
+
+Here is an example that utilizes everything discussed in the form of a minimal Sonar class.
 
 ```c++
 #include <mbed.h>
@@ -397,10 +399,10 @@ public:
  */
 class Sonar {
     DigitalOut   trigger;
-    InterruptIn  echo;
+    InterruptIn  echo;     // calls a callback when a pin changes
     Timer        timer;
-    Timeout      timeout;
-    Ticker       ticker;
+    Timeout      timeout;  // calls a callback once when a timeout expires
+    Ticker       ticker;   // calls a callback repeatedly with a timeout
     int32_t      begin;
     int32_t      end;
     float        distance;
@@ -421,14 +423,14 @@ public:
     }
 
     /**
-     *  Start the background thread to trigger sonar reads every 100ms
+     *  Start the background task to trigger sonar reads every 100ms
      */
     void start(void) {
         ticker.attach(callback(this, &Sonar::background_read), 0.01f);
     }
 
     /**
-     *  Stop the background thread that triggers sonar reads
+     *  Stop the background task that triggers sonar reads
      */
     void stop(void) {
         ticker.detach();
@@ -490,7 +492,7 @@ int main() {
         printf("%f\r\n", sonar.read());
     }
 }
-``` 
+```
 
 ### API
 
@@ -498,7 +500,7 @@ int main() {
 
 ###### Thread example with callbacks
 
-The Callback API provides a convenient way to pass arguments to spawned threads.  
+The Callback API provides a convenient way to pass arguments to spawned threads.
 
 [![View code](https://www.mbed.com/embed/?url=https://developer.mbed.org/teams/mbed_example/code/rtos_threading_with_callback/)](https://developer.mbed.org/teams/mbed_example/code/rtos_threading_with_callback/file/d4b2a035ffe3/main.cpp)
 
