@@ -464,7 +464,7 @@ public:
     }
 
     /**
-     *  Background callback thread attached to the periodic ticker that kicks off sonar reads
+     *  Background callback task attached to the periodic ticker that kicks off sonar reads
      */
     void background_read(void) {
         trigger = 1;
