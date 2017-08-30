@@ -396,8 +396,8 @@ public:
  *  Sonar class for the HC-SR04
  */
 class Sonar {
-    DigitalOut   *trigger;
-    InterruptIn  *echo;
+    DigitalOut   trigger;
+    InterruptIn  echo;
     Timer        timer;
     Timeout      timeout;
     Ticker       ticker;
@@ -412,14 +412,12 @@ public:
      *  @param trigger_pin  Pin used to trigger reads from the sonar device
      *  @param echo_pin     Pin used to receive the sonar's distance measurement
      */
-    Sonar(PinName trigger_pin, PinName echo_pin) {
-        trigger = new DigitalOut(trigger_pin);
-        echo = new InterruptIn(echo_pin);
-        trigger->write(0);
+    Sonar(PinName trigger_pin, PinName echo_pin) : trigger(trigger_pin), echo(echo_pin) {
+        trigger = 0;
         distance = -1;
 
-        echo->rise(callback(this, &Sonar::echo_in));    // Attach handler to the rising interruptIn edge
-        echo->fall(callback(this, &Sonar::echo_fall));  // Attach handler to the falling interruptIn edge
+        echo.rise(callback(this, &Sonar::echo_in));    // Attach handler to the rising interruptIn edge
+        echo.fall(callback(this, &Sonar::echo_fall));  // Attach handler to the falling interruptIn edge
     }
 
     /**
@@ -460,14 +458,14 @@ public:
      *  See use of this function in background_read().
      */
     void trigger_toggle(void) {
-        trigger->write(0);
+        trigger = 0;
     }
 
     /**
      *  Background callback thread attached to the periodic ticker that kicks off sonar reads
      */
     void background_read(void) {
-        trigger->write(1);
+        trigger = 1;
         timeout.attach(callback(this, &Sonar::trigger_toggle), 10.0e-6);
     }
 
