@@ -3,9 +3,9 @@ python:
     - "2.7"
 
 script:
-    - python check_tools/validate.py -i check_tools/prohibited.txt -f . &> pr_black_list.log
+    - python check_tools/validate.py -c -i check_tools/prohibited.txt -f . &> check_tools/pr_black_list.log
     - git remote add upstream https://github.com/armmbed/Handbook.git
     - git fetch upstream
     - git checkout new_engine
-    - python check_tools/validate.py -i check_tools/prohibited.txt -f . &> head_black_list.log
-    - diff pr_black_list.log head_black_list.log
+    - python check_tools/validate.py -c -i check_tools/prohibited.txt -f . &> check_tools/head_black_list.log
+    - python check_tools/smartdiff.py
