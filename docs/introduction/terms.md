@@ -1,5 +1,5 @@
 ## Glossary
-
+ 
 ### A
 
 **API** - [Application programming interface](/docs/v5.6/reference/api-overview.html).
