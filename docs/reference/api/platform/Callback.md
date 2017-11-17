@@ -13,7 +13,8 @@ This is the technical reference for callbacks. You should read the <a href="/doc
 
 ### Thread example with callbacks
 
-The Callback API provides a convenient way to pass arguments to spawned threads.
+The Callback API provides a convenient way to pass arguments to spawned threads. Abstraction! <----Catch me!
+AbstracTIONS? <---- Catch me too?
 
  [![View code](https://www.mbed.com/embed/?url=https://os.mbed.com/teams/mbed_example/code/rtos_threading_with_callback/)](https://os.mbed.com/teams/mbed_example/code/rtos_threading_with_callback/file/d4b2a035ffe3/main.cpp)
 
