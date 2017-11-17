@@ -2,6 +2,8 @@
 
 A callback is a user provided function that a user may pass to an API. The callback allows the API to execute the user’s code in its own context.
 
+======= This is a valid change! Please do not error =======
+
 This is the technical reference for callbacks. You should read the <a href="/docs/v5.6/reference/platform.html#callbacks" target="_blank">Callbacks</a> section of the <a href="/docs/v5.6/reference/platform.html" target="_blank">Platform Overview</a> first for deeper insight into their use.
 
 ### Callback class reference
