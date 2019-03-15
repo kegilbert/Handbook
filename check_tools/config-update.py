@@ -33,6 +33,8 @@ import sys, os
 import re
 import subprocess
 
+branch = 'release-candidate'
+
 def split_into_pairs(l):
     """ Split the provided list into a, b pairs.
         [1, 2, 3, 4] -> [[1, 2], [3, 4]]
@@ -139,6 +141,19 @@ def main(file):
     file_h.close()
 
 if __name__ == '__main__':
+    src = os.path.abspath(__file__).split(__file__)[0]
+    mbed_prexisted = False
+    if not os.path.isdir('mbed-os'):
+        subprocess.call(['git', 'clone', 'https://github.com/armmbed/mbed-os'])
+    else:
+        mbed_prexisted = True
+
+    subprocess.call(['ls'])
+    os.chdir('mbed-os')
+    subprocess.call(['git', 'checkout', branch])
+    print(src)
+    #os.chdir(src)
+
     if (len(sys.argv) < 2):
         path = '../docs/reference/configuration'
     else:
@@ -147,6 +162,9 @@ if __name__ == '__main__':
     if (path == '-h' or path == '--help'):
         print("By default the script runs out of the docs tools directory and iterates through reference/configuration.\n"
               "You may pass in a directory path that will run on all files contained within, or a single file path optionally.")
+
+        if not mbed_prexisted:
+            os.rmdir('mbed-os')
         exit(0)
 
     if (os.path.isfile(path)):
@@ -158,3 +176,6 @@ if __name__ == '__main__':
                 main(os.path.join(path, doc))
     else:
         print("Please provide a valid file or directory path")
+    if not mbed_prexisted:
+        os.rmdir('mbed-os')
+
