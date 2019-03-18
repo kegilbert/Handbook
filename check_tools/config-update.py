@@ -33,7 +33,7 @@ import sys, os
 import re
 import subprocess
 
-branch = 'release-candidate'
+branch = 'mbed-os-5.12'
 
 def split_into_pairs(l):
     """ Split the provided list into a, b pairs.
@@ -59,7 +59,7 @@ def is_string(line):
     regexp = re.compile(r'[a-z]', re.IGNORECASE)
     return regexp.search(line)
 
-def main(file):
+def main(file, owd):
     file_h = open(file, 'r+')
     file   = file_h.read()
 
@@ -82,7 +82,7 @@ def main(file):
             if ('Name: ' in blocks[i]):
                 lib = blocks[i].split('Name: ')[1].split('.')[0]
                 print("=================   %s   =================" % lib)
-                out = str(subprocess.check_output(["mbed", "compile", "--config", "-v", "--prefix", lib]))
+                out = str(subprocess.check_output(["mbed", "compile", "--config", "-v", "--source", os.path.join(owd, 'mbed-os'), "-t", "ARM", "-m", "K64F", "--prefix", lib]))
 
                 # Some APIs break config options into logical blocks in their config files.
                 # If a tag is applied to a parameter block, only display parameter names that contain that tag
@@ -141,18 +141,21 @@ def main(file):
     file_h.close()
 
 if __name__ == '__main__':
-    src = os.path.abspath(__file__).split(__file__)[0]
+    owd = os.getcwd()
     mbed_prexisted = False
     if not os.path.isdir('mbed-os'):
+        print('Mbed OS does not exist, cloning...')
         subprocess.call(['git', 'clone', 'https://github.com/armmbed/mbed-os'])
     else:
         mbed_prexisted = True
 
-    subprocess.call(['ls'])
     os.chdir('mbed-os')
     subprocess.call(['git', 'checkout', branch])
-    print(src)
-    #os.chdir(src)
+    os.chdir(owd)
+    if not os.path.isfile('.mbed'):
+        mbed_config_file = open('.mbed', 'w')
+        mbed_config_file.write('ROOT=.')
+        mbed_config_file.close()
 
     if (len(sys.argv) < 2):
         path = '../docs/reference/configuration'
@@ -163,19 +166,19 @@ if __name__ == '__main__':
         print("By default the script runs out of the docs tools directory and iterates through reference/configuration.\n"
               "You may pass in a directory path that will run on all files contained within, or a single file path optionally.")
 
-        if not mbed_prexisted:
-            os.rmdir('mbed-os')
+#        if not mbed_prexisted:
+#            os.rmdir('mbed-os')
         exit(0)
 
     if (os.path.isfile(path)):
-        main(path)
+        main(path, owd)
     elif (os.path.isdir(path)):
         for doc in os.listdir(path):
             if (doc != 'configuration.md'):
                 print('_____ %s _____' % os.path.join(path, doc))
-                main(os.path.join(path, doc))
+                main(os.path.join(path, doc), owd)
     else:
         print("Please provide a valid file or directory path")
-    if not mbed_prexisted:
-        os.rmdir('mbed-os')
+#    if not mbed_prexisted:
+#        os.rmdir('mbed-os')
 
