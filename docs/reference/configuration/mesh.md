@@ -105,6 +105,37 @@ Name: nanostack-eventloop.use_platform_tick_timer
     No value set
 ```
 ```
+Configuration parameters
+------------------------
+Name: nanostack-eventloop.exclude_highres_timer
+    Description: Exclude high resolution timer from build
+    Defined by: library:nanostack-eventloop
+    No value set
+Name: nanostack-eventloop.use_platform_tick_timer
+    Description: Use platform provided low resolution tick timer for eventloop
+    Defined by: library:nanostack-eventloop
+    No value set
+Name: nanostack-hal.critical-section-usable-from-interrupt
+    Description: Make critical section API usable from interrupt context. Else a mutex is used as locking primitive. Consult arm_hal_interrupt.c for possible side effects on interrupt latency.
+    Defined by: library:nanostack-hal
+    No value set
+Name: nanostack-hal.event-loop-dispatch-from-application
+    Description: Application is responsible of message dispatch loop. Else launch a separate thread for event-loop.
+    Defined by: library:nanostack-hal
+    No value set
+Name: nanostack-hal.event-loop-use-mbed-events
+    Description: Use Mbed OS global event queue for Nanostack event loop, rather than our own thread.
+    Defined by: library:nanostack-hal
+    No value set
+Name: nanostack-hal.event_loop_thread_stack_size
+    Description: Define event-loop thread stack size. [bytes]
+    Defined by: library:nanostack-hal
+    Macro name: MBED_CONF_NANOSTACK_HAL_EVENT_LOOP_THREAD_STACK_SIZE
+    Value: 6144 (set by library:nanostack-hal)
+Name: nanostack-hal.nvm_cfstore
+    Description: Use cfstore as a NVM storage. Else RAM simulation will be used
+    Defined by: library:nanostack-hal
+    No value set
 Name: nanostack.configuration
     Description: Build time configuration. Refer to Handbook for valid values. Default: full stack
     Defined by: library:nanostack
@@ -112,6 +143,8 @@ Name: nanostack.configuration
     Value: nanostack_full (set by library:nanostack)
 ```
 ```
+Configuration parameters
+------------------------
 Name: nanostack-hal.critical-section-usable-from-interrupt
     Description: Make critical section API usable from interrupt context. Else a mutex is used as locking primitive. Consult arm_hal_interrupt.c for possible side effects on interrupt latency.
     Defined by: library:nanostack-hal
@@ -352,4 +385,5 @@ Name: mbed-mesh-api.wisun-uc-fixed-channel
     Defined by: library:mbed-mesh-api
     Macro name: MBED_CONF_MBED_MESH_API_WISUN_UC_FIXED_CHANNEL
     Value: 0xffff (set by library:mbed-mesh-api)
+
 ```

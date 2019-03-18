@@ -64,7 +64,7 @@ Name: events.shared-eventsize
     Description: Event buffer size (bytes) for shared event queue
     Defined by: library:events
     Macro name: MBED_CONF_EVENTS_SHARED_EVENTSIZE
-    Value: 256 (set by library:events)
+    Value: 768 (set by library:events)
 Name: events.shared-highprio-eventsize
     Description: Event buffer size (bytes) for shared high-priority event queue
     Defined by: library:events

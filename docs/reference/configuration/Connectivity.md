@@ -51,6 +51,10 @@ Name: lwip.ipv6-enabled
     Description: Enable IPv6
     Defined by: library:lwip
     No value set
+Name: lwip.l3ip-enabled
+    Description: Enable support for L3IP interfaces
+    Defined by: library:lwip
+    No value set
 Name: lwip.mem-size
     Description: Size of heap (bytes) - used for outgoing packets, and also used by some drivers for reception. Current default (used if null here) is set to 1600 in opt.h, unless overridden by target Ethernet drivers.
     Defined by: library:lwip
@@ -184,6 +188,10 @@ Name: target.deep-sleep-latency
     Description: Time in ms required to go to and wake up from deep sleep (max 10)
     Defined by: target:Target
     No value set
+Name: target.default-form-factor
+    Description: Default form factor of this board taken from supported_form_factors. This must be a lowercase string such as 'arduino'
+    Defined by: target:Target
+    No value set
 Name: target.mpu-rom-end
     Description: Last address of ROM protected by the MPU
     Defined by: target:Target
@@ -194,24 +202,33 @@ Name: target.network-default-interface-type
     Defined by: target:Target
     Macro name: MBED_CONF_TARGET_NETWORK_DEFAULT_INTERFACE_TYPE
     Value: ETHERNET (set by target:K64F)
+Name: target.tickless-from-us-ticker
+    Description: Run tickless from the microsecond ticker rather than the low power ticker. Running tickless off of the microsecond ticker improves interrupt latency on targets which use lpticker_delay_ticks
+    Defined by: target:Target
+    No value set
 ```
 
 ```
 Configuration parameters
 ------------------------
 Name: nsapi.default-cellular-apn
+    Description: Default cellular Access Point Name.
     Defined by: library:nsapi
     No value set
 Name: nsapi.default-cellular-password
+    Description: Password for the default cellular network.
     Defined by: library:nsapi
     No value set
 Name: nsapi.default-cellular-plmn
+    Description: Default Public Land Mobile Network for cellular connection.
     Defined by: library:nsapi
     No value set
 Name: nsapi.default-cellular-sim-pin
+    Description: PIN for the default SIM card.
     Defined by: library:nsapi
     No value set
 Name: nsapi.default-cellular-username
+    Description: Username for the default cellular network.
     Defined by: library:nsapi
     No value set
 Name: nsapi.default-mesh-type
@@ -220,17 +237,21 @@ Name: nsapi.default-mesh-type
     Macro name: MBED_CONF_NSAPI_DEFAULT_MESH_TYPE
     Value: THREAD (set by library:nsapi)
 Name: nsapi.default-stack
+    Description: Default stack to be used, valid values: LWIP, NANOSTACK.
     Defined by: library:nsapi
     Macro name: MBED_CONF_NSAPI_DEFAULT_STACK
     Value: LWIP (set by library:nsapi)
 Name: nsapi.default-wifi-password
+    Description: Password for the default Wi-Fi network.
     Defined by: library:nsapi
     No value set
 Name: nsapi.default-wifi-security
+    Description: Wi-Fi security protocol, valid values are WEP, WPA, WPA2, WPA/WPA2.
     Defined by: library:nsapi
     Macro name: MBED_CONF_NSAPI_DEFAULT_WIFI_SECURITY
     Value: NONE (set by library:nsapi)
 Name: nsapi.default-wifi-ssid
+    Description: Default Wi-Fi SSID.
     Defined by: library:nsapi
     No value set
 Name: nsapi.dns-cache-size
@@ -256,7 +277,7 @@ Name: nsapi.present
     Defined by: library:nsapi
     Macro name: MBED_CONF_NSAPI_PRESENT
     Value: 1 (set by library:nsapi)
-Name: nsapi.socket-stats-enable
+Name: nsapi.socket-stats-enabled
     Description: Enable network socket statistics
     Defined by: library:nsapi
     No value set

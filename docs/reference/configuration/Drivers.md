@@ -7,6 +7,10 @@ The following is the complete list of driver configuration parameters, as genera
 ```
 Configuration parameters
 ------------------------
+Name: drivers.spi_count_max
+    Description: The maximum number of SPI peripherals used at the same time. Determines RAM allocated for SPI peripheral management. If null, limit determined by hardware.
+    Defined by: library:drivers
+    No value set
 Name: drivers.uart-serial-rxbuf-size
     Description: Default RX buffer size for a UARTSerial instance (unit Bytes))
     Defined by: library:drivers
