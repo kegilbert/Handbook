@@ -20,3 +20,13 @@ The Mbed OS bare metal profile is a compact profile of Mbed OS 5 without an RTOS
 | Mbed PSA | Not available | Available |
 
 To begin using the Mbed OS bare metal profile from Mbed OS 2, please follow our [instructions](../tutorials/migrating-to-mbed-os-5.html).
+
+### Enabling Mbed OS bare metal
+
+To enable the Mbed OS bare metal profile on an existing Mbed OS 5 application, create an `mbed_app.json` if you do not currently have one and add the following contents:
+
+```
+{
+    "requires": ["bare-metal"]
+}
+```
